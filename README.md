@@ -10,6 +10,11 @@ for federal regulations, and we needed to add 1-3 assignments to a large number 
 
 ## Current Status of Project
 
+### Update 3/24/22
+
+-running ```python3 delete_assign.py``` will take wildcard values for course(s) and assignment(s)
+-running ```python3 delete_assign.py``` *will delete courses* if you answer "y". **Pay Attention!**
+
 ### Update 3/22/22
 
 - add_folders.py is currently the main script to run via ```python3 add_folders.py```
@@ -24,7 +29,6 @@ for federal regulations, and we needed to add 1-3 assignments to a large number 
 - Create new query for finding the folder in which to place assignments.
 - Update add_assign.py so that it is putting assignments in the correct place.
 - Take command line arguments for the name of the folder and the name of the assignment.
-- Create delete_assign.py script for deleting old assignments.
 
 # The below functions will work, but will be deprecated as the project evolves
 
