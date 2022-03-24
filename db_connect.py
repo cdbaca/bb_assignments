@@ -22,3 +22,9 @@ def connect():
 
     return(cur)
 
+connect()
+
+if conn is not None:
+    conn.close()
+if cur is not None:
+    cur.close()

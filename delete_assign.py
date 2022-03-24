@@ -1,5 +1,4 @@
 import requests
-import json
 from requests.packages import urllib3
 import get_token, db_connect
 
@@ -68,8 +67,6 @@ def main():
     auth_token = get_token.store_token()
 
     content_list = get_contentIDs()
-
-    print(content_list)
 
     session = requests.session()
 
