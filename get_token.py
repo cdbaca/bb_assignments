@@ -40,9 +40,9 @@ def store_token():
     if not auth_token:
         session = requests.session()
         r = session.post(base_url + oauth_path, data=payload, auth=(key, secret), verify=False)
-        print("[auth:setToken()] STATUS CODE: " + str(r.status_code))
+        print("[auth:store_token()] STATUS CODE: " + str(r.status_code))
         res = json.loads(r.text)
-        print("[auth:setToken()] RESPONSE: \n" + json.dumps(res, indent=4, separators=(',', ': ')))
+        print("[auth:store_token()] RESPONSE: \n" + json.dumps(res, indent=4, separators=(',', ': ')))
         token = res['access_token']
         auth_token = 'Bearer ' + token
 
