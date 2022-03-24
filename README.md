@@ -12,8 +12,8 @@ for federal regulations, and we needed to add 1-3 assignments to a large number 
 
 ### Update 3/24/22
 
--running ```python3 delete_assign.py``` will take wildcard values for course(s) and assignment(s)
--running ```python3 delete_assign.py``` *will delete courses* if you answer "y". **Pay Attention!**
+- running ```python3 delete_assign.py``` will take wildcard values for course(s) and assignment(s)
+- running ```python3 delete_assign.py``` *WILL DELETE SELECTED ASSIGNMENTS* if you answer "y". **Pay Attention!**
 
 ### Update 3/22/22
 
