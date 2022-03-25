@@ -32,12 +32,33 @@ print("[auth:setToken()] RESPONSE: \n" + json.dumps(res,indent=4, separators=(',
 token = res['access_token']
 authStr = 'Bearer ' + token
 
-# TO DO: check if token expired and get new token if necessary
+# Query for finding Formative Assessment (changing to Learning Assessment) folders... or whatever other folders
+# TODO: use db_connect.py to connect to database and find folders to add the assignment to
 
+query = """select
+        cm.pk1
+        ,toc.label
+        ,toc.contentId
+        ,cm.course_id
+        ,t.name as term
+        from course_main cm
+            inner join course_term ct on ct.crsmain_pk1 = cm.pk1
+            inner join term t on t.pk1 = ct.term_pk1
+            left join (
+                        select
+                        toc.crsmain_pk1
+                        ,concat('_',toc.course_contents_pk1,'_1') as contentId
+                        ,toc.label
+                        from course_toc toc
+                        where toc.label like '%Formative Assessment%' 
+                        ) toc on toc.crsmain_pk1 = cm.pk1
+        where cm.course_id like '%dummy%'
+            and cm.pk1 not in (select crsmain_pk1 from course_course)
+        order by cm.course_id"""
 
 
 # open json file produced from get_data.py, use keys as course_id, use value as json string input for API
-
+# TODO: change the json here, or add json directly to script
 with open("data/bb_course_data.json", "r") as read_file:
     bb_data = json.load(read_file)
 

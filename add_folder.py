@@ -61,8 +61,8 @@ def main():
     # folder data
     j = """{
       "title": "Formative Assessments",
-      "body": "<h1>Formative Assessments are located here</h1>",
-      "description": "testing adding folders",
+      "body": "",
+      "description": "",
       "position": 4,
       "launchInNewWindow": false,
       "reviewable": true,
@@ -71,8 +71,8 @@ def main():
         "allowGuests": true,
         "allowObservers": true,
         "adaptiveRelease": {
-          "start": "2022-01-01T00:00:00.000Z",
-          "end": "2022-05-31T23:59:59.080Z"
+          "start": "2022-01-01T06:00:00.000Z",
+          "end": "2022-05-31T05:59:59.080Z"
         }
       },
       "contentHandler": {"id":"resource/x-bb-folder"}
