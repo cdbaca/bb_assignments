@@ -16,8 +16,7 @@ assign_path_two = '/contents/createAssignment'
 
 # Authorize script and get access token
 
-# Query for finding Formative Assessment (changing to Learning Assessment) folders... or whatever other folders
-# TODO: use db_connect.py to connect to database and find folders to add the assignment to
+# Function for finding courses and folders to add assignments to
 def folder_list():
     term_wildcard = input("What course or group of courses do you want to work with? ")
     folder_label = input("What folder in this course or these courses do you want to put the assignment in? ")
@@ -79,38 +78,33 @@ def main():
     session = requests.session()
     for record in folders_and_courses:
         # assignment json
-        j = """{
-                "parentId": "{0}",
-                "title": "Learning Assessment 1",
-                "instructions": "<h4>Test Instructions for the Assignment</h4>",
-                "description": "test description",
-                "position": 0,
-                "availability":
-                    {"available": "Yes",
-                    "allowGuests": true,
-                    "adaptiveRelease":
-                        {"start": "2022-02-07T17:07:19.365Z",
-                        "end": "2022-02-07T17:07:19.365Z"
-                        }
-                    },
-                "grading":
-                    {"due": "2022-02-07T17:07:19.365Z",
-                    "attemptsAllowed": 0,
-                    "isUnlimitedAttemptsAllowed": true
-                    },
-                "score":
-                    {"possible": 5
-                    }
-                }""".format(record[2])
+        j = """{"parentId": "%s",
+            "title": "Learning Assessment 2",
+            "instructions": "<h4>Test Instructions for the Assignment</h4>",
+            "description": "test description",
+            "position": 0,
+            "availability":
+                {"available": "Yes",
+                "allowGuests": true,
+                "adaptiveRelease":
+                    {"start": "2022-02-07T17:07:19.365Z",
+                    "end": "2022-02-07T17:07:19.365Z"}
+                },
+            "grading":
+                {"due": "2022-02-07T17:07:19.365Z",
+                "attemptsAllowed": 0,
+                "isUnlimitedAttemptsAllowed": true},
+            "score": {"possible": 5}
+            }""" %record[2]
         j = json.loads(j)
 
         # add assignment via API
-        r = session.post('https://' + base_url + assign_path_one + course_id + assign_path_two,
+        r = session.post('https://' + base_url + assign_path_one + record[3] + assign_path_two,
                      data=json.dumps(j),
                      headers={'Authorization':auth_token, 'Content-Type':'application/json'},
                      verify=False
                     )
-        print(f"Status Code: {r.status_code}, Response: {r.json()}")
+        print(f"Status Code: {r.status_code}, Learning assessment successfully added to {record[3]}!")
 
 if __name__ == '__main__':
     main()
