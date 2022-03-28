@@ -68,6 +68,7 @@ def folder_list():
 
 def main():
     # create data folder if not created and get auth token
+    # TODO: if token is invalid but .token file was created less than one hour ago, auth_token may not work
     get_token.data_folder()
     auth_token = get_token.store_token()
 
@@ -78,29 +79,29 @@ def main():
     session = requests.session()
     for record in folders_and_courses:
         # assignment json
-        j = """{"parentId": "%s",
-            "title": "Learning Assessment 2",
+        j = """{{"parentId": "{0}",
+            "title": "Learning Assessment 3",
             "instructions": "<h4>Test Instructions for the Assignment</h4>",
             "description": "test description",
             "position": 0,
             "availability":
-                {"available": "Yes",
+                {{"available": "Yes",
                 "allowGuests": true,
                 "adaptiveRelease":
-                    {"start": "2022-02-07T17:07:19.365Z",
-                    "end": "2022-02-07T17:07:19.365Z"}
-                },
+                    {{"start": "2022-02-07T17:07:19.365Z",
+                    "end": "2022-02-07T17:07:19.365Z"}}
+                }},
             "grading":
-                {"due": "2022-02-07T17:07:19.365Z",
+                {{"due": "2022-02-07T17:07:19.365Z",
                 "attemptsAllowed": 0,
-                "isUnlimitedAttemptsAllowed": true},
-            "score": {"possible": 5}
-            }""" %record[2]
-        j = json.loads(j)
+                "isUnlimitedAttemptsAllowed": true}},
+            "score": {{"possible": 5}}
+            }}""".format(record[2])
+        #j = json.loads(j)
 
         # add assignment via API
         r = session.post('https://' + base_url + assign_path_one + record[3] + assign_path_two,
-                     data=json.dumps(j),
+                     data=j,
                      headers={'Authorization':auth_token, 'Content-Type':'application/json'},
                      verify=False
                     )
