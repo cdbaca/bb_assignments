@@ -58,25 +58,28 @@ def main():
     course_ids = course_list()
     print(course_ids)
 
+    # get folder name
+    folder_name = input("What do you want to title the folder being created? ")
+
     # folder data
-    j = """{
-      "title": "Formative Assessments",
+    j = """{{
+      "title": "{0}",
       "body": "",
       "description": "",
       "position": 4,
       "launchInNewWindow": false,
       "reviewable": true,
-      "availability": {
+      "availability": {{
         "available": "Yes",
         "allowGuests": true,
         "allowObservers": true,
-        "adaptiveRelease": {
+        "adaptiveRelease": {{
           "start": "2022-01-01T06:00:00.000Z",
           "end": "2022-05-31T05:59:59.080Z"
-        }
-      },
-      "contentHandler": {"id":"resource/x-bb-folder"}
-    }"""
+        }}
+      }},
+      "contentHandler": {{"id":"resource/x-bb-folder"}}
+    }}""".format(folder_name)
     j = json.loads(j)
 
     # add folder to courses in course_ids tuples list

@@ -8,7 +8,43 @@ for all courses in a given term. At SAGU, we were previously using "Progress Rep
 to track student course engagement in purely online courses. This was insufficient
 for federal regulations, and we needed to add 1-3 assignments to a large number of courses.
 
+## How to use these scripts
+
+1. To use these scripts, you'll need admin access to a Blackboard instance and Blackboard DDA for that instance.
+2. Register as a Bb Developer [here](https://developer.blackboard.com/), register your application, and take note of your app secret & key.
+3. Register your app in your Blackboard instance under Administrator Panel > REST API Integrations > Create Integration.
+4. Clone this repository with ```git clone https://github.com/cdbaca/bb_assignments.git```
+5. Create a virtual environment with ```python3 -m venv venv```, and activate the environment.
+6. Run ```pip install -r requirements.txt```
+7. Create a new file in the bb_assignments directory called "credentials.py". In the file, you'll need the following 
+variables (*note: these variable names need to be exact*):
+   - App Info:
+     - key 
+     - secret 
+   - DDA Info:
+     - hostname 
+     - database
+     - username
+     - pwd
+     - port-id
+8. To use the scripts:
+   - To delete a group of assignments similarly-named assignments (or just one assignment) from a course or group of courses, run ```python3 delete_assign.py```.
+   - To add an assignment folder to the table of contents in a course or group of courses, run ```python3 add_folder.py```.
+   - To add an assignment to a similiarly named folder in a course or group of courses, run ```python3 add_assign.py```
+
+It is suggested to create dummy courses in a dummy term when starting out. Because this uses DDA to query for courses, 
+assignments, and folders, it can't be used on a test instance and must be used on a production Blackboard instance. However,
+the scripts are built so that you can escape from adding assignments/folders or deleting assignments if the list doesn't 
+produce the expected courses or folders.
+
 ## Current Status of Project
+
+### Update 3/28/22
+
+-The basics of the project all now work:
+1. ```python3 delete_assign.py``` will delete a specific assignment based on a (wildcard) from one or multiple courses.
+2. ```python3 add_folder.py``` will add a folder (title based on input) to a course or group of courses.
+3. ```python3 add_assign.py``` will add an assignment to a course or courses with a specific folder in those courses.
 
 ### Update 3/24/22
 
@@ -25,23 +61,7 @@ for federal regulations, and we needed to add 1-3 assignments to a large number 
 
 ## Current To Do
 
-- Create new query for finding course_ids in which to place the folder.
-- Create new query for finding the folder in which to place assignments.
-- Update add_assign.py so that it is putting assignments in the correct place.
-- Take command line arguments for the name of the folder and the name of the assignment.
-
-# The below functions will work, but will be deprecated as the project evolves
-
-## Finding Course Data and Creating JSON Files
-
-[Bb DDA Query](https://github.com/cdbaca/bb_assignments/blob/main/find_course_contents.sql)
-
-- This query should be used to pull the data necessary for running the script.
-- Save the contents of the query to a file called "course_data.xlsx" in a subdirectory called "data."
-- Run ```python3 get_data.py``` from the terminal. This will create the JSON files needed for add_assign.py.
-
-## Add Assignments to Bb Instance
-
-- Register as a Bb Developer [here](https://developer.blackboard.com/), register your application, and take note of your app secret & key.
-- Create a new file in the main directory called "credentials.py", save your key and secret to those names as variables in that file.
-- Once you have confirmed the JSON files in ../data are correct, you can run add_assign.py from the terminal.
+- **Fix ```get_token.store_token()```**: currently, if you run on two machines, the auth_token expiration will not sync to the file 
+creation time, thus creating an issue with authenticating the API call for a short time
+- **Add more options for dates and grades**: currently, the Adaptive Release, Due Date, and Points Possible options are
+hard-coded. Need to add ability to update those in the script.

@@ -14,8 +14,6 @@ assign_path_one = '/learn/api/public/v1/courses/courseId:'
 course_id = 'grade_test_course'
 assign_path_two = '/contents/createAssignment'
 
-# Authorize script and get access token
-
 # Function for finding courses and folders to add assignments to
 def folder_list():
     term_wildcard = input("What course or group of courses do you want to work with? ")
@@ -68,19 +66,22 @@ def folder_list():
 
 def main():
     # create data folder if not created and get auth token
-    # TODO: if token is invalid but .token file was created less than one hour ago, auth_token may not work
+    # TODO: if token is invalid but .token file was created less than one hour ago, auth_token may not work. Need to check auth_token status.
     get_token.data_folder()
     auth_token = get_token.store_token()
 
     # get folder/course list to add course
     folders_and_courses = folder_list()
 
+    # get name of assignment
+    assignment_name = input("What do you want to name the assignment? (case-sensitive) ")
+
     # add assignments to folders
     session = requests.session()
     for record in folders_and_courses:
         # assignment json
         j = """{{"parentId": "{0}",
-            "title": "Learning Assessment 3",
+            "title": "{1}",
             "instructions": "<h4>Test Instructions for the Assignment</h4>",
             "description": "test description",
             "position": 0,
@@ -96,8 +97,7 @@ def main():
                 "attemptsAllowed": 0,
                 "isUnlimitedAttemptsAllowed": true}},
             "score": {{"possible": 5}}
-            }}""".format(record[2])
-        #j = json.loads(j)
+            }}""".format(record[2], assignment_name)
 
         # add assignment via API
         r = session.post('https://' + base_url + assign_path_one + record[3] + assign_path_two,
@@ -105,7 +105,10 @@ def main():
                      headers={'Authorization':auth_token, 'Content-Type':'application/json'},
                      verify=False
                     )
-        print(f"Status Code: {r.status_code}, Learning assessment successfully added to {record[3]}!")
+        if r.status_code == 201:
+            print(f"Status Code: {r.status_code}, {assignment_name} successfully added to {record[3]}!")
+        else:
+            print(f"Status Code: {r.status_code}: assignment was not added :(")
 
 if __name__ == '__main__':
     main()

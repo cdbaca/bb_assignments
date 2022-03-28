@@ -5,7 +5,6 @@ import credentials
 import os
 import time
 
-
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Base variables/urls
