@@ -79,7 +79,7 @@ def main():
     session = requests.session()
     for record in folders_and_courses:
         # assignment json
-        j = """"{
+        j = """{
                 "parentId": "{0}",
                 "title": "Learning Assessment 1",
                 "instructions": "<h4>Test Instructions for the Assignment</h4>",
