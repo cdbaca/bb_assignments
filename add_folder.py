@@ -14,16 +14,18 @@ course_id = 'grade_test_course'
 assign_path_two = '/contents'
 
 def course_list():
-    term_wildcard = input("What term do you want to add a folder to? (type \"dummy\" for now) ")
+    term_wildcard = input("What term do you want to add a folder to? (e.g., FA22, SP21, etc.) ")
 
     query = '''
-                select
-                course_id
+                select distinct
+                cm.course_id
                 from course_main cm
 	                inner join course_term ct on ct.crsmain_pk1 = cm.pk1
 	                inner join term t on t.pk1 = ct.term_pk1
-                where t.name like '%{0}%'
-	                and cm.pk1 not in (select crsmain_pk1 from course_course)'''.format(term_wildcard)
+                where cm.course_id like '%{0}%'
+                    and t.name similar to '%(Distance|Dual|Online|Extension)%'
+	                and cm.pk1 not in (select crsmain_pk1 from course_course)
+                order by course_id'''.format(term_wildcard)
 
     course_list = []
 
@@ -74,8 +76,8 @@ def main():
         "allowGuests": true,
         "allowObservers": true,
         "adaptiveRelease": {{
-          "start": "2022-01-01T06:00:00.000Z",
-          "end": "2022-05-31T05:59:59.080Z"
+          "start": "2022-08-29T06:00:00.000Z",
+          "end": "2022-12-09T05:59:59.080Z"
         }}
       }},
       "contentHandler": {{"id":"resource/x-bb-folder"}}

@@ -16,7 +16,7 @@ assign_path_two = '/contents/createAssignment'
 
 # Function for finding courses and folders to add assignments to
 def folder_list():
-    term_wildcard = input("What course or group of courses do you want to work with? ")
+    term_wildcard = input("What course or group of courses do you want to work with? (e.g., FA22, SP22, etc.) ")
     folder_label = input("What folder in this course or these courses do you want to put the assignment in? ")
 
     query = """select
@@ -38,7 +38,16 @@ def folder_list():
                             ) toc on toc.crsmain_pk1 = cm.pk1
             where cm.course_id like '%{1}%'
                 and cm.pk1 not in (select crsmain_pk1 from course_course)
-        order by cm.course_id""".format(folder_label, term_wildcard)
+				--and t.name similar to '%(Distance|Dual|Online|Extension)%'
+				and t.name in (
+				                    --'Fall 2022 SAGU at Rhema (A Session) Undergraduate Distance Education',
+								   'Fall 2022 SAGU at Rhema (B Session) Undergraduate Distance Education'
+								   ,'Fall 2022 Graduate Distance Education B Session Classes'
+								   ,'Fall 2022 Undergraduate Online B Sessions'
+								   --,'Fall 2022 Undergraduate Online A Sessions'
+								   --,'Fall 2022 Graduate Distance Education A Session Classes'
+								  	)
+            order by cm.course_id""".format(folder_label, term_wildcard)
 
     folder_list = []
 
@@ -89,11 +98,11 @@ def main():
                 {{"available": "Yes",
                 "allowGuests": true,
                 "adaptiveRelease":
-                    {{"start": "2022-02-07T17:07:19.365Z",
-                    "end": "2022-02-07T17:07:19.365Z"}}
+                    {{"start": "2022-10-24T05:00:00.000Z",
+                    "end": "2022-11-14T05:59:59.080Z"}}
                 }},
             "grading":
-                {{"due": "2022-02-07T17:07:19.365Z",
+                {{"due": "2022-11-11T05:59:59.000Z",
                 "attemptsAllowed": 0,
                 "isUnlimitedAttemptsAllowed": true}},
             "score": {{"possible": 5}}
