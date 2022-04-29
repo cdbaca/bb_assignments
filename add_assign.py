@@ -1,5 +1,4 @@
 import requests
-import json
 from requests.packages import urllib3
 import get_token, db_connect
 
@@ -16,38 +15,31 @@ assign_path_two = '/contents/createAssignment'
 
 # Function for finding courses and folders to add assignments to
 def folder_list():
-    term_wildcard = input("What course or group of courses do you want to work with? (e.g., FA22, SP22, etc.) ")
+    term_wildcard = input("What term do you want to work in? ")
     folder_label = input("What folder in this course or these courses do you want to put the assignment in? ")
 
-    query = """select
-            cm.pk1
-            ,toc.label
-            ,toc.contentId
-            ,cm.course_id
-            ,t.name as term
-            from course_main cm
-                inner join course_term ct on ct.crsmain_pk1 = cm.pk1
-                inner join term t on t.pk1 = ct.term_pk1
-                left join (
-                            select
-                            toc.crsmain_pk1
-                            ,concat('_',toc.course_contents_pk1,'_1') as contentId
-                            ,toc.label
-                            from course_toc toc
-                            where toc.label like '%{0}%' 
-                            ) toc on toc.crsmain_pk1 = cm.pk1
-            where cm.course_id like '%{1}%'
-                and cm.pk1 not in (select crsmain_pk1 from course_course)
-				--and t.name similar to '%(Distance|Dual|Online|Extension)%'
-				and t.name in (
-				                    --'Fall 2022 SAGU at Rhema (A Session) Undergraduate Distance Education',
-								   'Fall 2022 SAGU at Rhema (B Session) Undergraduate Distance Education'
-								   ,'Fall 2022 Graduate Distance Education B Session Classes'
-								   ,'Fall 2022 Undergraduate Online B Sessions'
-								   --,'Fall 2022 Undergraduate Online A Sessions'
-								   --,'Fall 2022 Graduate Distance Education A Session Classes'
-								  	)
-            order by cm.course_id""".format(folder_label, term_wildcard)
+    query = """SELECT
+                cm.pk1
+                ,toc.label
+                ,toc.contentId
+                ,cm.course_id
+                ,t.name AS term
+                FROM course_main cm
+                    INNER JOIN course_term ct ON ct.crsmain_pk1 = cm.pk1
+                    INNER JOIN term t ON t.pk1 = ct.term_pk1
+                    LEFT JOIN (
+                                SELECT 
+                                toc.crsmain_pk1
+                                ,concat('_',toc.course_contents_pk1,'_1') AS contentId
+                                ,toc.label
+                                FROM course_toc toc
+                                WHERE toc.label LIKE '%{0}%' 
+                                ) toc ON toc.crsmain_pk1 = cm.pk1
+                WHERE t.name LIKE '%{1}%'
+                    AND t.name SIMILAR TO '%(Distance|Online|Dual|Extension)%'
+                    AND t.name NOT SIMILAR TO '%(A Session|B Session)%'
+                    AND cm.pk1 NOT IN (SELECT crsmain_pk1 FROM course_course)
+            ORDER BY cm.course_id""".format(folder_label, term_wildcard)
 
     folder_list = []
 

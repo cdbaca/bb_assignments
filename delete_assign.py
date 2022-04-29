@@ -32,10 +32,36 @@ def get_contentIDs():
                                         from course_contents cc
                                         where
                                             cc.title like '%{0}%'
+                                            and cc.title not like '%Zoom Meeting%'
                             ) cc on cc.crsmain_pk1 = cm.pk1
                         where cm.course_id like '%{1}%'
                             and cm.pk1 not in (select crsmain_pk1 from course_course)
                         order by cm.course_id'''.format(content_wildcard, term_wildcard)
+
+    # query = '''
+    # select
+    #                     cm.pk1 as course_pk
+    #                     ,toc.label
+    #                     ,toc.parentId
+    #                     ,course_id
+    #                     ,t.name
+    #                     from course_main cm
+    #                         inner join course_term ct on ct.crsmain_pk1 = cm.pk1
+    #                         inner join term t on t.pk1 = ct.term_pk1
+    #                         left join (
+    #                                     select
+    #                                     crsmain_pk1
+    #                                     ,concat('_', toc.pk1, '_1') as parentId
+    #                                     ,toc.label
+    #                                     from course_toc toc
+    #                                     where
+    #                                         toc.label = '{0}'
+    #                         ) toc on toc.crsmain_pk1 = cm.pk1
+    #                     where cm.course_id like '%{1}%'
+    #                         and cm.pk1 not in (select crsmain_pk1 from course_course)
+	# 						and toc.label is not null
+    #                     order by cm.course_id
+    # '''.format(content_wildcard, term_wildcard)
 
     cur = db_connect.connect()
 
