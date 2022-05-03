@@ -4,3 +4,4 @@ tmp
 credentials.py
 __pycache__
 .DS_Store
+patch_availability.py

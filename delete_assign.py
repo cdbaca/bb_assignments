@@ -6,15 +6,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 conn = None
 cur = None
 
-# API Endpoints / string variables
-base_url = 'blackboard.sagu.edu'
-assign_path_one = '/learn/api/public/v1/courses/courseId:'
-assign_path_two = '/contents'
-
 def get_contentIDs():
-    term_wildcard = input('Enter a course_id wildcard for the query: ')
-    content_wildcard = input('Enter a content title wildcard for the query: ')
-
     query = '''select
                         cm.pk1 as course_pk
                         ,cc.title
@@ -31,37 +23,12 @@ def get_contentIDs():
                                         ,cc.title
                                         from course_contents cc
                                         where
-                                            cc.title like '%{0}%'
-                                            and cc.title not like '%Zoom Meeting%'
+                                            cc.title like '%[CONTENT WILDCARD]%'
+                                            --and cc.title not like '%Zoom Meeting%'
                             ) cc on cc.crsmain_pk1 = cm.pk1
-                        where cm.course_id like '%{1}%'
+                        where cm.course_id like '%[ENTER TERM SUFFIX HERE]%'
                             and cm.pk1 not in (select crsmain_pk1 from course_course)
-                        order by cm.course_id'''.format(content_wildcard, term_wildcard)
-
-    # query = '''
-    # select
-    #                     cm.pk1 as course_pk
-    #                     ,toc.label
-    #                     ,toc.parentId
-    #                     ,course_id
-    #                     ,t.name
-    #                     from course_main cm
-    #                         inner join course_term ct on ct.crsmain_pk1 = cm.pk1
-    #                         inner join term t on t.pk1 = ct.term_pk1
-    #                         left join (
-    #                                     select
-    #                                     crsmain_pk1
-    #                                     ,concat('_', toc.pk1, '_1') as parentId
-    #                                     ,toc.label
-    #                                     from course_toc toc
-    #                                     where
-    #                                         toc.label = '{0}'
-    #                         ) toc on toc.crsmain_pk1 = cm.pk1
-    #                     where cm.course_id like '%{1}%'
-    #                         and cm.pk1 not in (select crsmain_pk1 from course_course)
-	# 						and toc.label is not null
-    #                     order by cm.course_id
-    # '''.format(content_wildcard, term_wildcard)
+                        order by cm.course_id'''
 
     cur = db_connect.connect()
 
@@ -95,6 +62,11 @@ def main():
     content_list = get_contentIDs()
 
     session = requests.session()
+
+    # API Endpoints / string variables
+    base_url = 'blackboard.sagu.edu'
+    assign_path_one = '/learn/api/public/v1/courses/courseId:'
+    assign_path_two = '/contents'
 
     for record in content_list:
         if record[1] is not None:

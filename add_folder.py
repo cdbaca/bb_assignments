@@ -7,35 +7,16 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 cur = None
 conn = None
 
-# API Endpoints / string variables
-base_url = 'blackboard.sagu.edu'
-assign_path_one = '/learn/api/public/v1/courses/courseId:'
-course_id = 'grade_test_course'
-assign_path_two = '/contents'
-
 def course_list():
-<<<<<<< Updated upstream
-    term_wildcard = input("What term do you want to add a folder to? (e.g., FA22, SP21, etc.) ")
-=======
-    term_wildcard = input("What term do you want to add a folder to? ")
->>>>>>> Stashed changes
-
     query = '''
                 select distinct
                 cm.course_id
                 from course_main cm
 	                inner join course_term ct on ct.crsmain_pk1 = cm.pk1
 	                inner join term t on t.pk1 = ct.term_pk1
-<<<<<<< Updated upstream
-                where cm.course_id like '%{0}%'
-                    and t.name similar to '%(Distance|Dual|Online|Extension)%'
-	                and cm.pk1 not in (select crsmain_pk1 from course_course)
-                order by course_id'''.format(term_wildcard)
-=======
-                where t.name like '%{0}%'
+                where t.name like '%[ENTER TERM HERE]%'
                     and t.name similar to '%(Distance|SOM|Online|Rhema|Doctoral|Graduate Distance|Session)%'
-	                and cm.pk1 not in (select crsmain_pk1 from course_course)'''.format(term_wildcard)
->>>>>>> Stashed changes
+	                and cm.pk1 not in (select crsmain_pk1 from course_course)'''
 
     course_list = []
 
@@ -93,6 +74,11 @@ def main():
       "contentHandler": {{"id":"resource/x-bb-folder"}}
     }}""".format(folder_name)
     j = json.loads(j)
+
+    # API Endpoints / string variables
+    base_url = 'blackboard.sagu.edu'
+    assign_path_one = '/learn/api/public/v1/courses/courseId:'
+    assign_path_two = '/contents'
 
     # add folder to courses in course_ids tuples list
     session = requests.session()

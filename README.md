@@ -28,9 +28,10 @@ variables (*note: these variable names need to be exact*):
      - pwd
      - port-id
 8. To use the scripts:
+   - Directly change the selections of courses/terms/assignment/folder names in the sql queries of the scripts.
    - To delete a group of assignments similarly-named assignments (or just one assignment) from a course or group of courses, run ```python3 delete_assign.py```.
    - To add an assignment folder to the table of contents in a course or group of courses, run ```python3 add_folder.py```.
-   - To add an assignment to a similiarly named folder in a course or group of courses, run ```python3 add_assign.py```
+   - To add an assignment to a similarly named folder in a course or group of courses, run ```python3 add_assign.py```
 
 It is suggested to create dummy courses in a dummy term when starting out. Because this uses DDA to query for courses, 
 assignments, and folders, it can't be used on a test instance and must be used on a production Blackboard instance. However,
@@ -38,6 +39,13 @@ the scripts are built so that you can escape from adding assignments/folders or 
 produce the expected courses or folders.
 
 ## Current Status of Project
+### Update 5/2/22
+- Removed user input with formatted sql strings. This should have been done sooner, as f-string sql queries technically
+allows for sql injection. This was not a major issue, as there are several security measures in place (read-only db, IP address limits, etc.).
+Still, it was bad practice to keep that in the final code.
+- This means that any changes to selection of courses and terms in *any* of the scripts needs to be a direct change to the
+.py file itself.
+- patch_duedates.py will update gradebook column due dates.
 
 ### Update 3/28/22
 
