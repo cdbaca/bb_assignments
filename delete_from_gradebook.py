@@ -8,17 +8,17 @@ cur = None
 
 # API Endpoints / string variables
 base_url = 'blackboard.sagu.edu'
-assign_path_one = '/learn/api/public/v1/courses/courseId:'
-assign_path_two = '/contents'
+assign_path_one = '/learn/api/public/v2/courses/courseId:'
+assign_path_two = '/gradebook/columns'
 
 def get_contentIDs():
     term_wildcard = input('Enter a course_id wildcard for the query: ')
-    content_wildcard = input('Enter a content title wildcard for the query: ')
+    content_wildcard = input('Enter a gradebook item title wildcard for the query: ')
 
     query = '''select
                         cm.pk1 as course_pk
-                        ,cc.title
-                        ,cc.parentId
+                        ,gm.title
+                        ,gm.parentId
                         ,course_id
                         ,t.name
                         from course_main cm
@@ -27,44 +27,19 @@ def get_contentIDs():
                             left join (
                                         select
                                         crsmain_pk1
-                                        ,concat('_', cc.pk1, '_1') as parentId
-                                        ,cc.title
-                                        from course_contents cc
+                                        ,concat('_', gm.pk1, '_1') as parentId
+                                        ,gm.title
+                                        from gradebook_main gm
                                         where
-                                            cc.title like '%{0}%'
-                                            and cc.title not like '%Zoom Meeting%'
-                                            and cc.title not like '%Week%'
-                                            and cc.title not like '%OCP%'
-                            ) cc on cc.crsmain_pk1 = cm.pk1
+                                            gm.title like '%{0}%'
+                                            and gm.title not like '%Zoom Meeting%'
+                                            and gm.title not like '%Week%'
+                                            and gm.title not like '%OCP%'
+                            ) gm on gm.crsmain_pk1 = cm.pk1
                         where cm.course_id like '%{1}%'
                             and cm.pk1 not in (select crsmain_pk1 from course_course)
                             --and t.name like '%B Session%'
                         order by cm.course_id'''.format(content_wildcard, term_wildcard)
-
-    # query = '''
-    # select
-    #                     cm.pk1 as course_pk
-    #                     ,toc.label
-    #                     ,toc.parentId
-    #                     ,course_id
-    #                     ,t.name
-    #                     from course_main cm
-    #                         inner join course_term ct on ct.crsmain_pk1 = cm.pk1
-    #                         inner join term t on t.pk1 = ct.term_pk1
-    #                         left join (
-    #                                     select
-    #                                     crsmain_pk1
-    #                                     ,concat('_', toc.pk1, '_1') as parentId
-    #                                     ,toc.label
-    #                                     from course_toc toc
-    #                                     where
-    #                                         toc.label = '{0}'
-    #                         ) toc on toc.crsmain_pk1 = cm.pk1
-    #                     where cm.course_id like '%{1}%'
-    #                         and cm.pk1 not in (select crsmain_pk1 from course_course)
-	# 						and toc.label is not null
-    #                     order by cm.course_id
-    # '''.format(content_wildcard, term_wildcard)
 
     cur = db_connect.connect()
 
@@ -108,7 +83,7 @@ def main():
                          verify=False
                          )
 
-            if r.status_code == 204:
+            if r.status_code == 200:
                 print("Successfully deleted {0} from {1}".format(record[1], record[3]))
                 print("--------------")
             else:

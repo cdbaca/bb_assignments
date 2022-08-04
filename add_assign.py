@@ -6,13 +6,6 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 cur = None
 conn = None
 
-# API Endpoints / string variables
-
-base_url = 'blackboard.sagu.edu'
-assign_path_one = '/learn/api/public/v1/courses/courseId:'
-course_id = 'grade_test_course'
-assign_path_two = '/contents/createAssignment'
-
 # Function for finding courses and folders to add assignments to
 def folder_list():
     term_wildcard = input("What term do you want to work in? ")
@@ -77,6 +70,11 @@ def main():
     # get name of assignment
     assignment_name = input("What do you want to name the assignment? (case-sensitive) ")
 
+    #API Endpoints
+    base_url = 'https://blackboard.sagu.edu'
+    assign_path_one = '/learn/api/public/v1/courses/courseId:'
+    assign_path_two = '/contents/createAssignment'
+
     # add assignments to folders
     session = requests.session()
     for record in folders_and_courses:
@@ -101,7 +99,7 @@ def main():
             }}""".format(record[2], assignment_name)
 
         # add assignment via API
-        r = session.post('https://' + base_url + assign_path_one + record[3] + assign_path_two,
+        r = session.post(base_url + assign_path_one + record[3] + assign_path_two,
                      data=j,
                      headers={'Authorization':auth_token, 'Content-Type':'application/json'},
                      verify=False

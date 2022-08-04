@@ -69,7 +69,7 @@ def main():
     # get folder name
 
     # content data
-    j = """{"availability": {"adaptiveRelease": {"start": "2022-05-09T06:00:00.000Z","end": "2022-05-31T05:59:59.080Z"}}}"""
+    j = """{"availability": {"adaptiveRelease": {"start": "2022-05-30T06:00:00.000Z","end": "2022-06-18T05:59:59.080Z"}}}"""
 
     # change dates for assignments in course_ids tuples list
     session = requests.session()
@@ -88,3 +88,9 @@ if cur is not None:
      cur.close()
 if conn is not None:
      conn.close()
+
+# """
+# curl --request POST "https://api.viafoura.com/v2/dev.viafoura.com/users/login?password=TeNn!sNum8er1&email=novak@example.com"
+# curl --data '{"availability": {"adaptiveRelease": {"start": "2022-05-09T06:00:00.000Z","end": "2022-05-31T05:59:59.080Z"}}}'
+#     -X PATCH https://blackboard.sagu.edu//learn/api/public/v1/courses/courseId:{0}/contents/{1}
+# """

@@ -26,8 +26,11 @@ def get_gradeID():
                 inner join term t on t.pk1 = ct.term_pk1
             where t.name like '%{0}%'
                 and t.name not like '%Session%'
+                --and t.name like '%B Session%'
                 and gm.title like '%{1}%'
                 and course_contents_pk1 is not null
+                --and gm.due_date <> '2022-05-27 23:59:00'
+				and gm.due_date <> '2022-06-17 23:59:00'
             order by course_id, title
             '''.format(term_wildcard, content_wildcard)
 
@@ -65,7 +68,7 @@ def main():
     session = requests.session()
 
     j = """
-    {"grading": {"due": "2022-05-28T04:59:00.000Z"}}
+    {"grading": {"due": "2022-06-18T04:59:00.000Z"}}
     """
 
     for record in content_list:
