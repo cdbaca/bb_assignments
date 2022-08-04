@@ -6,15 +6,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 conn = None
 cur = None
 
-# API Endpoints / string variables
-base_url = 'blackboard.sagu.edu'
-assign_path_one = '/learn/api/public/v1/courses/courseId:'
-assign_path_two = '/contents'
-
 def get_contentIDs():
-    term_wildcard = input('Enter a course_id wildcard for the query: ')
-    content_wildcard = input('Enter a content title wildcard for the query: ')
-
     query = '''select
                         cm.pk1 as course_pk
                         ,cc.title
@@ -36,7 +28,7 @@ def get_contentIDs():
                                             and cc.title not like '%Week%'
                                             and cc.title not like '%OCP%'
                             ) cc on cc.crsmain_pk1 = cm.pk1
-                        where cm.course_id like '%{1}%'
+                        where cm.course_id like '%[ENTER TERM SUFFIX HERE]%'
                             and cm.pk1 not in (select crsmain_pk1 from course_course)
                             --and t.name like '%B Session%'
                         order by cm.course_id'''.format(content_wildcard, term_wildcard)
@@ -98,6 +90,11 @@ def main():
     content_list = get_contentIDs()
 
     session = requests.session()
+
+    # API Endpoints / string variables
+    base_url = 'blackboard.sagu.edu'
+    assign_path_one = '/learn/api/public/v1/courses/courseId:'
+    assign_path_two = '/contents'
 
     for record in content_list:
         if record[1] is not None:

@@ -8,9 +8,6 @@ conn = None
 
 # Function for finding courses and folders to add assignments to
 def folder_list():
-    term_wildcard = input("What term do you want to work in? ")
-    folder_label = input("What folder in this course or these courses do you want to put the assignment in? ")
-
     query = """SELECT
                 cm.pk1
                 ,toc.label
@@ -26,13 +23,13 @@ def folder_list():
                                 ,concat('_',toc.course_contents_pk1,'_1') AS contentId
                                 ,toc.label
                                 FROM course_toc toc
-                                WHERE toc.label LIKE '%{0}%' 
+                                WHERE toc.label LIKE '%[CONTENT WILDCARD HERE]%' 
                                 ) toc ON toc.crsmain_pk1 = cm.pk1
-                WHERE t.name LIKE '%{1}%'
+                WHERE t.name LIKE '%[ENTER TERM HERE]%'
                     AND t.name SIMILAR TO '%(Distance|Online|Dual|Extension)%'
                     AND t.name NOT SIMILAR TO '%(A Session|B Session)%'
                     AND cm.pk1 NOT IN (SELECT crsmain_pk1 FROM course_course)
-            ORDER BY cm.course_id""".format(folder_label, term_wildcard)
+            ORDER BY cm.course_id"""
 
     folder_list = []
 
@@ -70,8 +67,14 @@ def main():
     # get name of assignment
     assignment_name = input("What do you want to name the assignment? (case-sensitive) ")
 
+<<<<<<< HEAD
     #API Endpoints
     base_url = 'https://blackboard.sagu.edu'
+=======
+    # API Endpoints / string variables
+
+    base_url = 'blackboard.sagu.edu'
+>>>>>>> 0263fa21ddf1fb3fbf829bd4e3f2f67e4f933a89
     assign_path_one = '/learn/api/public/v1/courses/courseId:'
     assign_path_two = '/contents/createAssignment'
 

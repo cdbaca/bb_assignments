@@ -7,15 +7,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 cur = None
 conn = None
 
-# API Endpoints / string variables
-base_url = 'blackboard.sagu.edu'
-assign_path_one = '/learn/api/public/v1/courses/courseId:'
-assign_path_two = '/contents/'
-
 def course_list():
-    term_wildcard = input("Enter term wildcard: ")
-    content_wildcard = input("What assignment do you want to change availability for? ")
-
     query = '''
                 select
                 cm.course_id
@@ -27,11 +19,11 @@ def course_list():
                     inner join course_contents cc on cc.crsmain_pk1 = cm.pk1
                     inner join course_term ct on ct.crsmain_pk1 = cm.pk1
                     inner join term t on t.pk1 = ct.term_pk1
-                where t.name like '%{0}%'
+                where t.name like '%[ENTER TERM HERE]%'
                     and t.name not like '%Session%'
-                    and cc.title like '%{1}%'
+                    and cc.title like '%[ENTER CONTENT TITLE HERE]%'
                     and cm.pk1 not in (select crsmain_pk1 from course_course)
-                order by course_id'''.format(term_wildcard, content_wildcard)
+                order by course_id'''
 
     course_list = []
 
@@ -70,6 +62,11 @@ def main():
 
     # content data
     j = """{"availability": {"adaptiveRelease": {"start": "2022-05-30T06:00:00.000Z","end": "2022-06-18T05:59:59.080Z"}}}"""
+
+    # API Endpoints / string variables
+    base_url = 'blackboard.sagu.edu'
+    assign_path_one = '/learn/api/public/v1/courses/courseId:'
+    assign_path_two = '/contents/'
 
     # change dates for assignments in course_ids tuples list
     session = requests.session()

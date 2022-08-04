@@ -6,15 +6,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 conn = None
 cur = None
 
-# API Endpoints / string variables
-base_url = 'blackboard.sagu.edu'
-assign_path_one = '/learn/api/public/v2/courses/courseId:'
-assign_path_two = '/gradebook/columns'
-
 def get_gradeID():
-    term_wildcard = input('Enter a term wildcard for the query: ')
-    content_wildcard = input('Enter a content title wildcard for the query: ')
-
     query = '''
             select
             cm.course_id
@@ -24,15 +16,19 @@ def get_gradeID():
                 inner join gradebook_main gm on gm.crsmain_pk1 = cm.pk1
                 inner join course_term ct on ct.crsmain_pk1 = cm.pk1
                 inner join term t on t.pk1 = ct.term_pk1
-            where t.name like '%{0}%'
+            where t.name like '%[ENTER TERM HERE]%'
                 and t.name not like '%Session%'
+<<<<<<< HEAD
                 --and t.name like '%B Session%'
                 and gm.title like '%{1}%'
+=======
+                and gm.title like '%[ENTER GRADEBOOK COLUMN HERE]%'
+>>>>>>> 0263fa21ddf1fb3fbf829bd4e3f2f67e4f933a89
                 and course_contents_pk1 is not null
                 --and gm.due_date <> '2022-05-27 23:59:00'
 				and gm.due_date <> '2022-06-17 23:59:00'
             order by course_id, title
-            '''.format(term_wildcard, content_wildcard)
+            '''
 
     cur = db_connect.connect()
 
@@ -70,6 +66,11 @@ def main():
     j = """
     {"grading": {"due": "2022-06-18T04:59:00.000Z"}}
     """
+
+    # API Endpoints / string variables
+    base_url = 'blackboard.sagu.edu'
+    assign_path_one = '/learn/api/public/v2/courses/courseId:'
+    assign_path_two = '/gradebook/columns'
 
     for record in content_list:
         if record[1] is not None:
