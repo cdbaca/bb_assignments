@@ -18,12 +18,8 @@ def get_gradeID():
                 inner join term t on t.pk1 = ct.term_pk1
             where t.name like '%[ENTER TERM HERE]%'
                 and t.name not like '%Session%'
-<<<<<<< HEAD
                 --and t.name like '%B Session%'
                 and gm.title like '%{1}%'
-=======
-                and gm.title like '%[ENTER GRADEBOOK COLUMN HERE]%'
->>>>>>> 0263fa21ddf1fb3fbf829bd4e3f2f67e4f933a89
                 and course_contents_pk1 is not null
                 --and gm.due_date <> '2022-05-27 23:59:00'
 				and gm.due_date <> '2022-06-17 23:59:00'

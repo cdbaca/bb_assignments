@@ -7,6 +7,8 @@ conn = None
 cur = None
 
 def get_contentIDs():
+    term_wildcard = input('Enter a course_id wildcard for the query: ')
+    content_wildcard = input('Enter a gradebook item title wildcard for the query: ')
     query = '''select
                         cm.pk1 as course_pk
                         ,cc.title
@@ -27,8 +29,11 @@ def get_contentIDs():
                                             and cc.title not like '%Zoom Meeting%'
                                             and cc.title not like '%Week%'
                                             and cc.title not like '%OCP%'
+                                            and cc.title not like '%Spreadsheet%'
+                                            and cc.title not like '%week four%'
+                                            and cc.title not like '%New%'
                             ) cc on cc.crsmain_pk1 = cm.pk1
-                        where cm.course_id like '%[ENTER TERM SUFFIX HERE]%'
+                        where cm.course_id like '%{1}%'
                             and cm.pk1 not in (select crsmain_pk1 from course_course)
                             --and t.name like '%B Session%'
                         order by cm.course_id'''.format(content_wildcard, term_wildcard)

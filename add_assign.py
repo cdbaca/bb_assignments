@@ -67,14 +67,8 @@ def main():
     # get name of assignment
     assignment_name = input("What do you want to name the assignment? (case-sensitive) ")
 
-<<<<<<< HEAD
     #API Endpoints
     base_url = 'https://blackboard.sagu.edu'
-=======
-    # API Endpoints / string variables
-
-    base_url = 'blackboard.sagu.edu'
->>>>>>> 0263fa21ddf1fb3fbf829bd4e3f2f67e4f933a89
     assign_path_one = '/learn/api/public/v1/courses/courseId:'
     assign_path_two = '/contents/createAssignment'
 

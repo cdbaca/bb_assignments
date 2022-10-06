@@ -35,6 +35,8 @@ def get_contentIDs():
                                             and gm.title not like '%Zoom Meeting%'
                                             and gm.title not like '%Week%'
                                             and gm.title not like '%OCP%'
+                                            and gm.title not like '%week four%'
+                                            and gm.deleted_ind <> 'Y'
                             ) gm on gm.crsmain_pk1 = cm.pk1
                         where cm.course_id like '%{1}%'
                             and cm.pk1 not in (select crsmain_pk1 from course_course)
